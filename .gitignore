@@ -58,3 +58,6 @@ logs/
 tmp/
 temp/
 *.tmp
+
+# Documentation (local only)
+docs/
