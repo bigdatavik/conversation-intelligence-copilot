@@ -44,7 +44,7 @@ resources:
           notebook_task:
             notebook_path: ./src/notebooks/01_generate_transcripts.py
           new_cluster:
-            spark_version: "14.3.x-scala2.12"
+            spark_version: "16.4.x-scala2.12"
             node_type_id: "i3.xlarge"
             num_workers: 0
             spark_conf:
@@ -57,7 +57,7 @@ resources:
           notebook_task:
             notebook_path: ./src/notebooks/02_bronze_pipeline.py
           new_cluster:
-            spark_version: "14.3.x-scala2.12"
+            spark_version: "16.4.x-scala2.12"
             node_type_id: "i3.xlarge"
             num_workers: 0
             spark_conf:
@@ -70,7 +70,7 @@ resources:
           notebook_task:
             notebook_path: ./src/notebooks/03_silver_pipeline.py
           new_cluster:
-            spark_version: "14.3.x-scala2.12"
+            spark_version: "16.4.x-scala2.12"
             node_type_id: "i3.xlarge"
             num_workers: 0
             spark_conf:
@@ -83,7 +83,7 @@ resources:
           notebook_task:
             notebook_path: ./src/notebooks/04_gold_pipeline.py
           new_cluster:
-            spark_version: "14.3.x-scala2.12"
+            spark_version: "16.4.x-scala2.12"
             node_type_id: "i3.xlarge"
             num_workers: 0
             spark_conf:
@@ -96,7 +96,7 @@ resources:
           notebook_task:
             notebook_path: ./src/notebooks/06_export_transcripts.py
           new_cluster:
-            spark_version: "14.3.x-scala2.12"
+            spark_version: "16.4.x-scala2.12"
             node_type_id: "i3.xlarge"
             num_workers: 0
             spark_conf:
@@ -109,7 +109,7 @@ resources:
           notebook_task:
             notebook_path: ./src/notebooks/07_genie_space.py
           new_cluster:
-            spark_version: "14.3.x-scala2.12"
+            spark_version: "16.4.x-scala2.12"
             node_type_id: "i3.xlarge"
             num_workers: 0
             spark_conf:
@@ -133,7 +133,7 @@ resources:
           notebook_task:
             notebook_path: ./src/notebooks/01_generate_transcripts.py
           new_cluster:
-            spark_version: "14.3.x-scala2.12"
+            spark_version: "16.4.x-scala2.12"
             node_type_id: "i3.xlarge"
             num_workers: 0
             spark_conf:
@@ -147,7 +147,7 @@ resources:
           notebook_task:
             notebook_path: ./src/notebooks/02_bronze_pipeline.py
           new_cluster:
-            spark_version: "14.3.x-scala2.12"
+            spark_version: "16.4.x-scala2.12"
             node_type_id: "i3.xlarge"
             num_workers: 0
             spark_conf:
@@ -161,7 +161,7 @@ resources:
           notebook_task:
             notebook_path: ./src/notebooks/03_silver_pipeline.py
           new_cluster:
-            spark_version: "14.3.x-scala2.12"
+            spark_version: "16.4.x-scala2.12"
             node_type_id: "i3.xlarge"
             num_workers: 0
             spark_conf:
@@ -175,7 +175,7 @@ resources:
           notebook_task:
             notebook_path: ./src/notebooks/04_gold_pipeline.py
           new_cluster:
-            spark_version: "14.3.x-scala2.12"
+            spark_version: "16.4.x-scala2.12"
             node_type_id: "i3.xlarge"
             num_workers: 0
             spark_conf:
@@ -189,7 +189,7 @@ resources:
           notebook_task:
             notebook_path: ./src/notebooks/06_export_transcripts.py
           new_cluster:
-            spark_version: "14.3.x-scala2.12"
+            spark_version: "16.4.x-scala2.12"
             node_type_id: "i3.xlarge"
             num_workers: 0
             spark_conf:
@@ -203,7 +203,7 @@ resources:
           notebook_task:
             notebook_path: ./src/notebooks/07_genie_space.py
           new_cluster:
-            spark_version: "14.3.x-scala2.12"
+            spark_version: "16.4.x-scala2.12"
             node_type_id: "i3.xlarge"
             num_workers: 0
             spark_conf:
