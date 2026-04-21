@@ -68,7 +68,61 @@
 
 ---
 
-## Slide 5: Four Functions That Change Everything
+## Slide 5: Data Transformation Journey
+
+**Visual:** Detailed flow diagram showing transformations at each layer
+
+### SOURCE (Raw JSON)
+- Telephony systems: Balto, Genesys, Five9
+- Format: JSON with nested utterances
+- Fields: `call_id`, `agent_id`, `member_id`, `utterances[]`, `timestamps`
+
+### BRONZE LAYER (Raw Delta Tables)
+**Tables Created:**
+- `bronze_calls` - Call metadata
+- `bronze_utterances` - Individual speaker turns
+- `bronze_agents` - Agent reference data
+- `bronze_members` - Member reference data
+
+**Transformations:**
+- Parse JSON structure
+- Flatten nested arrays
+- Add ingestion timestamp
+- No business logic applied
+
+### SILVER LAYER (AI-Enriched)
+**Tables Created:**
+- `silver_calls` - Enriched call data
+- `silver_utterances` - Utterances with sentiment
+- `silver_transcript_chunks` - Chunked text for RAG
+
+**AI Transformations:**
+| AI Function | Input | Output Column |
+|-------------|-------|---------------|
+| `ai_analyze_sentiment()` | utterance text | `sentiment` |
+| `ai_classify()` | full transcript | `ai_call_reason` |
+| `ai_classify()` | full transcript | `ai_compliance_status` |
+| `ai_summarize()` | full transcript | `ai_summary` |
+
+### GOLD LAYER (Analytics-Ready)
+**Tables Created:**
+- `gold_call_summary` - Denormalized (1 row per call)
+- `gold_agent_performance` - Agent-level KPIs
+- `gold_call_reason_metrics` - Metrics by category
+- `gold_compliance_analysis` - Compliance flag patterns
+
+**Aggregations:**
+- JOIN calls + agents + members
+- Calculate `resolution_rate`, `compliance_rate`
+- Compute `avg_csat`, `avg_compliance_score`
+- Explode `compliance_flags` for pattern analysis
+
+**Say This:**
+> "Let me walk you through the data transformation journey. We start with raw JSON from your telephony system—could be Balto, Genesys, whatever you use. Bronze layer just parses and structures—no business logic, just get it into Delta format. Silver is where the magic happens—we apply four AI Functions to every record. ai_analyze_sentiment scores each utterance. ai_classify runs twice—once for call reason, once for compliance status. ai_summarize generates a 2-sentence summary. Finally, Gold layer aggregates for analytics—we denormalize, calculate KPIs, and create the tables that power Genie Space. The key insight: AI enrichment happens in Silver, aggregation happens in Gold. Clean separation of concerns."
+
+---
+
+## Slide 6: Four Functions That Change Everything
 
 | Function | What It Does |
 |----------|--------------|
@@ -82,7 +136,7 @@
 
 ---
 
-## Slide 6: AI Functions in Action
+## Slide 7: AI Functions in Action
 
 **SQL Examples:**
 
@@ -118,7 +172,7 @@ SELECT ai_summarize(full_transcript, 100) AS ai_summary
 
 ---
 
-## Slide 7: Questions That Showcase AI Functions
+## Slide 8: Questions That Showcase AI Functions
 
 ### Genie Space Questions (AI Function Evidence)
 
@@ -148,7 +202,7 @@ SELECT ai_summarize(full_transcript, 100) AS ai_summary
 
 ---
 
-## Slide 8: Same Platform, Different Classifications
+## Slide 9: Same Platform, Different Classifications
 
 | Member Support | Sales Prospecting |
 |----------------|-------------------|
@@ -161,7 +215,7 @@ SELECT ai_summarize(full_transcript, 100) AS ai_summary
 
 ---
 
-## Slide 9: Your Quality Copilot
+## Slide 10: Your Quality Copilot
 
 **Three AI Agents:**
 
@@ -174,7 +228,7 @@ SELECT ai_summarize(full_transcript, 100) AS ai_summary
 
 ---
 
-## Slide 10: Let's See It In Action
+## Slide 11: Let's See It In Action
 
 **[LIVE DEMO]**
 
@@ -183,7 +237,7 @@ SELECT ai_summarize(full_transcript, 100) AS ai_summary
 
 ---
 
-## Slide 11: Demo Questions
+## Slide 12: Demo Questions
 
 ### Genie Space (Analytics)
 | Question | What It Shows |
@@ -208,7 +262,7 @@ SELECT ai_summarize(full_transcript, 100) AS ai_summary
 
 ---
 
-## Slide 12: What You've Seen
+## Slide 13: What You've Seen
 
 **Bullets:**
 - Raw transcripts → AI-enriched insights in one pipeline
@@ -222,7 +276,7 @@ SELECT ai_summarize(full_transcript, 100) AS ai_summary
 
 ---
 
-## Slide 13: Build This In Your Environment
+## Slide 14: Build This In Your Environment
 
 **Steps:**
 1. Land transcripts in Unity Catalog Volume (JSON)
