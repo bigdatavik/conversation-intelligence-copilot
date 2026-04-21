@@ -12,7 +12,7 @@ workspace:
 variables:
   catalog:
     description: "Unity Catalog name"
-    default: "humana_payer"
+    default: "catalog_payer"
   schema:
     description: "Schema name"
     default: "conversation-intelligence-copilot"
