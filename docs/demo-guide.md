@@ -118,7 +118,37 @@ SELECT ai_summarize(full_transcript, 100) AS ai_summary
 
 ---
 
-## Slide 7: Same Platform, Different Classifications
+## Slide 7: Questions That Showcase AI Functions
+
+### Genie Space Questions (AI Function Evidence)
+
+| Question | AI Function | Column Queried |
+|----------|-------------|----------------|
+| "Show me the AI-generated summaries for calls needing review" | `ai_summarize()` | `ai_summary` |
+| "What's the breakdown of AI compliance status?" | `ai_classify()` | `ai_compliance_status` |
+| "Compare AI call reasons vs manual call reasons" | `ai_classify()` | `ai_call_reason` vs `call_reason` |
+| "Which agents have the most AI-detected compliance issues?" | `ai_classify()` | `ai_compliance_status` |
+
+### Supervisor Agent Questions (Combined Evidence)
+
+| Question | What It Shows |
+|----------|---------------|
+| "Show me calls where AI detected missing disclosure and give me examples" | Genie returns `ai_compliance_status`, KA shows transcript |
+| "What patterns did the AI find in low-scoring calls? Show examples." | AI classifications + transcript evidence |
+| "Compare the AI summary to the actual transcript for a problem call" | Shows `ai_summary` vs raw transcript |
+
+### Best Demo Questions (columns with `ai_` prefix prove AI did the work)
+
+- **"Show me the AI summary and compliance status for the 5 lowest scoring calls"**
+- **"How often does AI compliance status disagree with manual compliance score?"**
+- **"What call reasons did the AI detect most frequently?"**
+
+**Say This:**
+> "These questions are specifically designed to showcase that AI Functions are doing the work. Notice that the answers reference columns with the 'ai_' prefix—ai_summary, ai_compliance_status, ai_call_reason. These are the outputs of our AI Functions. When you demo, point out these column names to prove the AI enrichment is happening. The comparison questions—like AI vs manual compliance—are particularly powerful because they show AI validation of human work."
+
+---
+
+## Slide 8: Same Platform, Different Classifications
 
 | Member Support | Sales Prospecting |
 |----------------|-------------------|
@@ -131,7 +161,7 @@ SELECT ai_summarize(full_transcript, 100) AS ai_summary
 
 ---
 
-## Slide 8: Your Quality Copilot
+## Slide 9: Your Quality Copilot
 
 **Three AI Agents:**
 
@@ -144,7 +174,7 @@ SELECT ai_summarize(full_transcript, 100) AS ai_summary
 
 ---
 
-## Slide 9: Let's See It In Action
+## Slide 10: Let's See It In Action
 
 **[LIVE DEMO]**
 
@@ -153,7 +183,7 @@ SELECT ai_summarize(full_transcript, 100) AS ai_summary
 
 ---
 
-## Slide 10: Demo Questions
+## Slide 11: Demo Questions
 
 ### Genie Space (Analytics)
 | Question | What It Shows |
@@ -178,7 +208,7 @@ SELECT ai_summarize(full_transcript, 100) AS ai_summary
 
 ---
 
-## Slide 11: What You've Seen
+## Slide 12: What You've Seen
 
 **Bullets:**
 - Raw transcripts → AI-enriched insights in one pipeline
@@ -192,7 +222,7 @@ SELECT ai_summarize(full_transcript, 100) AS ai_summary
 
 ---
 
-## Slide 12: Build This In Your Environment
+## Slide 13: Build This In Your Environment
 
 **Steps:**
 1. Land transcripts in Unity Catalog Volume (JSON)
