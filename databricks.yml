@@ -1,0 +1,211 @@
+# Databricks Asset Bundle - Conversation Intelligence Copilot
+#
+# Deploy: databricks bundle deploy -t dev
+# Run:    databricks bundle run conversation_intelligence_setup -t dev
+
+bundle:
+  name: conversation-intelligence-copilot
+
+workspace:
+  host: https://fevm-serverless-mwelio-humana.cloud.databricks.com
+
+variables:
+  catalog:
+    description: "Unity Catalog name"
+    default: "humana_payer"
+  schema:
+    description: "Schema name"
+    default: "conversation-intelligence-copilot"
+  warehouse_id:
+    description: "SQL Warehouse ID for Genie Space"
+    default: ""
+
+targets:
+  dev:
+    default: true
+    mode: development
+    workspace:
+      root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/dev
+
+  prod:
+    mode: production
+    workspace:
+      root_path: /Workspace/Shared/.bundle/${bundle.name}/prod
+
+resources:
+  jobs:
+    # Full pipeline setup job - runs all notebooks in sequence
+    conversation_intelligence_setup:
+      name: "[${bundle.target}] Conversation Intelligence - Full Setup"
+      description: "Runs all notebooks to set up the Conversation Intelligence Copilot"
+
+      tasks:
+        - task_key: generate_transcripts
+          notebook_task:
+            notebook_path: ./src/notebooks/01_generate_transcripts.py
+          new_cluster:
+            spark_version: "14.3.x-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 0
+            spark_conf:
+              spark.master: "local[*]"
+          timeout_seconds: 1800
+
+        - task_key: bronze_pipeline
+          depends_on:
+            - task_key: generate_transcripts
+          notebook_task:
+            notebook_path: ./src/notebooks/02_bronze_pipeline.py
+          new_cluster:
+            spark_version: "14.3.x-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 0
+            spark_conf:
+              spark.master: "local[*]"
+          timeout_seconds: 900
+
+        - task_key: silver_pipeline
+          depends_on:
+            - task_key: bronze_pipeline
+          notebook_task:
+            notebook_path: ./src/notebooks/03_silver_pipeline.py
+          new_cluster:
+            spark_version: "14.3.x-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 0
+            spark_conf:
+              spark.master: "local[*]"
+          timeout_seconds: 1800
+
+        - task_key: gold_pipeline
+          depends_on:
+            - task_key: silver_pipeline
+          notebook_task:
+            notebook_path: ./src/notebooks/04_gold_pipeline.py
+          new_cluster:
+            spark_version: "14.3.x-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 0
+            spark_conf:
+              spark.master: "local[*]"
+          timeout_seconds: 900
+
+        - task_key: export_transcripts
+          depends_on:
+            - task_key: silver_pipeline
+          notebook_task:
+            notebook_path: ./src/notebooks/06_export_transcripts.py
+          new_cluster:
+            spark_version: "14.3.x-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 0
+            spark_conf:
+              spark.master: "local[*]"
+          timeout_seconds: 900
+
+        - task_key: genie_space
+          depends_on:
+            - task_key: gold_pipeline
+          notebook_task:
+            notebook_path: ./src/notebooks/07_genie_space.py
+          new_cluster:
+            spark_version: "14.3.x-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 0
+            spark_conf:
+              spark.master: "local[*]"
+          timeout_seconds: 600
+
+      # Notifications (optional - uncomment and configure)
+      # email_notifications:
+      #   on_failure:
+      #     - your-email@databricks.com
+
+      permissions:
+        - level: CAN_VIEW
+          group_name: "users"
+
+    # Individual notebook jobs for running single steps
+    generate_transcripts:
+      name: "[${bundle.target}] 01 - Generate Transcripts"
+      tasks:
+        - task_key: main
+          notebook_task:
+            notebook_path: ./src/notebooks/01_generate_transcripts.py
+          new_cluster:
+            spark_version: "14.3.x-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 0
+            spark_conf:
+              spark.master: "local[*]"
+          timeout_seconds: 1800
+
+    bronze_pipeline:
+      name: "[${bundle.target}] 02 - Bronze Pipeline"
+      tasks:
+        - task_key: main
+          notebook_task:
+            notebook_path: ./src/notebooks/02_bronze_pipeline.py
+          new_cluster:
+            spark_version: "14.3.x-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 0
+            spark_conf:
+              spark.master: "local[*]"
+          timeout_seconds: 900
+
+    silver_pipeline:
+      name: "[${bundle.target}] 03 - Silver Pipeline"
+      tasks:
+        - task_key: main
+          notebook_task:
+            notebook_path: ./src/notebooks/03_silver_pipeline.py
+          new_cluster:
+            spark_version: "14.3.x-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 0
+            spark_conf:
+              spark.master: "local[*]"
+          timeout_seconds: 1800
+
+    gold_pipeline:
+      name: "[${bundle.target}] 04 - Gold Pipeline"
+      tasks:
+        - task_key: main
+          notebook_task:
+            notebook_path: ./src/notebooks/04_gold_pipeline.py
+          new_cluster:
+            spark_version: "14.3.x-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 0
+            spark_conf:
+              spark.master: "local[*]"
+          timeout_seconds: 900
+
+    export_transcripts:
+      name: "[${bundle.target}] 06 - Export Transcripts"
+      tasks:
+        - task_key: main
+          notebook_task:
+            notebook_path: ./src/notebooks/06_export_transcripts.py
+          new_cluster:
+            spark_version: "14.3.x-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 0
+            spark_conf:
+              spark.master: "local[*]"
+          timeout_seconds: 900
+
+    genie_space:
+      name: "[${bundle.target}] 07 - Genie Space"
+      tasks:
+        - task_key: main
+          notebook_task:
+            notebook_path: ./src/notebooks/07_genie_space.py
+          new_cluster:
+            spark_version: "14.3.x-scala2.12"
+            node_type_id: "i3.xlarge"
+            num_workers: 0
+            spark_conf:
+              spark.master: "local[*]"
+          timeout_seconds: 600
